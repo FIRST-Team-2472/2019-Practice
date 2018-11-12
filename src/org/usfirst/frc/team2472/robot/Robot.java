@@ -7,6 +7,13 @@
 
 package org.usfirst.frc.team2472.robot;
 
+import java.util.ArrayList;
+
+import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import actions.Action;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,10 +26,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends IterativeRobot {
-	private static final String kDefaultAuto = "Default";
-	private static final String kCustomAuto = "My Auto";
-	private String m_autoSelected;
-	private SendableChooser<String> m_chooser = new SendableChooser<>();
+	
+	ArrayList<Action> step = new ArrayList<Action>();
+
+	ArrayList<Action> stepSecondary = new ArrayList<Action>();
+	
+	TalonSRX frontLeft = new TalonSRX(1);
+	TalonSRX backLeft = new TalonSRX(2);
+	TalonSRX frontRight = new TalonSRX(3);
+	TalonSRX backRight = new TalonSRX(4);
+	
+
+	int currentAction = 0;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -30,9 +45,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		m_chooser.addDefault("Default Auto", kDefaultAuto);
-		m_chooser.addObject("My Auto", kCustomAuto);
-		SmartDashboard.putData("Auto choices", m_chooser);
+		
 	}
 
 	/**
@@ -48,10 +61,61 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autoSelected = m_chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + m_autoSelected);
+
+
+		
+
+
+
+		//Cycles through the steps and stops when it finds a null
+
+		if (step.size() > 0 && step.get(currentAction) != null) {
+
+
+
+			if (!step.get(currentAction).isFinished()) {
+
+				step.get(currentAction).periodic();
+
+			}
+
+
+
+			if (!stepSecondary.get(currentAction).isFinished()) {
+
+				stepSecondary.get(currentAction).periodic();
+
+			}
+
+
+
+			if (step.get(currentAction).isFinished() && stepSecondary.get(currentAction).isFinished()) {
+
+
+
+				currentAction++;
+
+
+
+				if (step.get(currentAction) != null) {
+
+
+
+					step.get(currentAction).startAction();
+
+					stepSecondary.get(currentAction).startAction();
+
+
+
+				}
+
+
+
+			}
+
+
+
+		}
 	}
 
 	/**
@@ -59,15 +123,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		switch (m_autoSelected) {
-			case kCustomAuto:
-				// Put custom auto code here
-				break;
-			case kDefaultAuto:
-			default:
-				// Put default auto code here
-				break;
-		}
+		
 	}
 
 	/**
@@ -82,5 +138,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		frontLeft.set(ControlMode.PercentOutput, 0.2);
+		backLeft.set(ControlMode.PercentOutput, 0.2);
+		frontRight.set(ControlMode.PercentOutput, 0.2);
+		backRight.set(ControlMode.PercentOutput, 0.2);
 	}
 }
