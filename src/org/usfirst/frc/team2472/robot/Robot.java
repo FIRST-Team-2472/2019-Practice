@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import actions.Action;
+import actions.Forward;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,16 +29,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	
 	ArrayList<Action> step = new ArrayList<Action>();
-
 	ArrayList<Action> stepSecondary = new ArrayList<Action>();
 	
-	TalonSRX frontLeft = new TalonSRX(1);
-	TalonSRX backLeft = new TalonSRX(2);
-	TalonSRX frontRight = new TalonSRX(3);
-	TalonSRX backRight = new TalonSRX(4);
+	int currentAction = 0;
+
+	
+	public static TalonSRX frontLeft = new TalonSRX(13);
+	public static TalonSRX backLeft = new TalonSRX(3);
+	public static TalonSRX frontRight = new TalonSRX(14);
+	public static TalonSRX backRight = new TalonSRX(5);
 	
 
-	int currentAction = 0;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -45,6 +47,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		frontRight.setInverted(true);
+		backRight.setInverted(true);
 		
 	}
 
@@ -63,22 +67,34 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 
 
+		step.add(new Forward(2));
+		stepSecondary.add(new Action());
+		step.add(null);
+		stepSecondary.add(null);
+
+
 		
 
+		
+	}
 
-
+	/**
+	 * This function is called periodically during autonomous.
+	 */
+	@Override
+	public void autonomousPeriodic() {
 		//Cycles through the steps and stops when it finds a null
 
 		if (step.size() > 0 && step.get(currentAction) != null) {
 
-
+			System.out.println("stepDone?"+step.get(currentAction).isFinished());
 
 			if (!step.get(currentAction).isFinished()) {
 
 				step.get(currentAction).periodic();
 
 			}
-
+			System.out.println("stepDone?"+step.get(currentAction).isFinished());
 
 
 			if (!stepSecondary.get(currentAction).isFinished()) {
@@ -91,38 +107,18 @@ public class Robot extends IterativeRobot {
 
 			if (step.get(currentAction).isFinished() && stepSecondary.get(currentAction).isFinished()) {
 
-
-
 				currentAction++;
 
 
-
 				if (step.get(currentAction) != null) {
-
-
-
+					System.out.println("starting action");
+					
 					step.get(currentAction).startAction();
-
 					stepSecondary.get(currentAction).startAction();
-
-
-
 				}
-
-
-
 			}
 
-
-
 		}
-	}
-
-	/**
-	 * This function is called periodically during autonomous.
-	 */
-	@Override
-	public void autonomousPeriodic() {
 		
 	}
 
