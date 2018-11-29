@@ -6,23 +6,21 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
-public class ActionList {
+public class DoubleActionList {
 	
 	private final Queue<Actionable> stepPrimary;
 	private final Queue<Actionable> stepSecondary;
 	
-	public ActionList() {
+	public DoubleActionList() {
 		stepPrimary = new ArrayDeque<Actionable>();
 		stepSecondary = new ArrayDeque<Actionable>();
 	}
 	
-	public void addPrimaryAction(Actionable action) {
-		stepPrimary.add(action);
+	public void addPrimaryAction(Actionable primaryAction, Actionable secondaryAction) {
+		stepPrimary.add(primaryAction);
+		stepPrimary.add(secondaryAction);
 	}
 	
-	public void addSecondaryAction(Actionable action) {
-		stepSecondary.add(action);
-	}
 	
 	public void step() {
 		try {
