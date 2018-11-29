@@ -29,6 +29,22 @@ public class ActionList {
 			Actionable primary = stepPrimary.element();
 			Actionable secondary = stepSecondary.element();
 			
+			primary.periodic();
+			secondary.periodic();
+			
+			if (primary.isFinished() && secondary.isFinished()) {
+				primary.endAction();
+				secondary.endAction();
+				
+				stepPrimary.remove();
+				stepSecondary.remove();
+				primary = stepPrimary.element();
+				secondary = stepSecondary.element();
+				
+				primary.startAction();
+				secondary.startAction();
+			}
+			
 		} catch (NoSuchElementException e) {
 			System.out.println("Nothing in queue I am done");
 		}
