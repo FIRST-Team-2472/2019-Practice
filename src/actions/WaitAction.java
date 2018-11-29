@@ -1,12 +1,12 @@
 package actions;
 
-public class Wait implements Actionable{
+public class WaitAction implements Actionable{
 	
 	private long endTime;
 	private final double lifetime;
 	
 
-	public Wait (double lifetime) {
+	public WaitAction (double lifetime) {
 		this.lifetime = lifetime;
 	}
 	
