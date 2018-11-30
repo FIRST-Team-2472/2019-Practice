@@ -16,7 +16,7 @@ public class DoubleActionList {
 		stepSecondary = new ArrayDeque<Actionable>();
 	}
 	
-	public void addPrimaryAction(Actionable primaryAction, Actionable secondaryAction) {
+	public void addAction(Actionable primaryAction, Actionable secondaryAction) {
 		stepPrimary.add(primaryAction);
 		stepPrimary.add(secondaryAction);
 	}
