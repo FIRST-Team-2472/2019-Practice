@@ -14,7 +14,10 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import actions.Action;
+import actions.DoubleActionList;
+import actions.DriveAction;
 import actions.Forward;
+import actions.WaitAction;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,10 +31,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
-	ArrayList<Action> step = new ArrayList<Action>();
-	ArrayList<Action> stepSecondary = new ArrayList<Action>();
 	
-	int currentAction = 0;
+	DoubleActionList actions = new DoubleActionList();
+	
 
 	
 	public static TalonSRX frontLeft = new TalonSRX(13);
@@ -65,17 +67,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-
-
-		step.add(new Forward(2));
-		stepSecondary.add(new Action());
-		step.add(null);
-		stepSecondary.add(null);
-
-
-		
-
-		
+		actions.addAction(new DriveAction(4,0.5), new WaitAction(0));
+		actions.addAction(new DriveAction(3,-0.5), new WaitAction(0));
 	}
 
 	/**
@@ -83,43 +76,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		//Cycles through the steps and stops when it finds a null
-
-		if (step.size() > 0 && step.get(currentAction) != null) {
-
-			System.out.println("stepDone?"+step.get(currentAction).isFinished());
-
-			if (!step.get(currentAction).isFinished()) {
-
-				step.get(currentAction).periodic();
-
-			}
-			System.out.println("stepDone?"+step.get(currentAction).isFinished());
-
-
-			if (!stepSecondary.get(currentAction).isFinished()) {
-
-				stepSecondary.get(currentAction).periodic();
-
-			}
-
-
-
-			if (step.get(currentAction).isFinished() && stepSecondary.get(currentAction).isFinished()) {
-
-				currentAction++;
-
-
-				if (step.get(currentAction) != null) {
-					System.out.println("starting action");
-					
-					step.get(currentAction).startAction();
-					stepSecondary.get(currentAction).startAction();
-				}
-			}
-
-		}
-		
+		actions.step();
 	}
 
 	/**
