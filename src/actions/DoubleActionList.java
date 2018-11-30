@@ -11,14 +11,18 @@ public class DoubleActionList {
 	private final Queue<Actionable> stepPrimary;
 	private final Queue<Actionable> stepSecondary;
 	
+	boolean done = true;
+	
 	public DoubleActionList() {
 		stepPrimary = new ArrayDeque<Actionable>();
 		stepSecondary = new ArrayDeque<Actionable>();
+		addAction(new WaitAction(0),new WaitAction(0));
 	}
 	
 	public void addAction(Actionable primaryAction, Actionable secondaryAction) {
+		System.out.println(""+ primaryAction + secondaryAction);
 		stepPrimary.add(primaryAction);
-		stepPrimary.add(secondaryAction);
+		stepSecondary.add(secondaryAction);
 	}
 	
 	
@@ -30,9 +34,16 @@ public class DoubleActionList {
 			primary.periodic();
 			secondary.periodic();
 			
-			if (primary.isFinished() && secondary.isFinished()) {
+			if (primary.isFinished()) {
 				primary.endAction();
+			}
+			if (secondary.isFinished()) {
 				secondary.endAction();
+			}
+			
+			
+			if (primary.isFinished() && secondary.isFinished()) {
+				System.out.println("next action");
 				
 				stepPrimary.remove();
 				stepSecondary.remove();
@@ -44,7 +55,10 @@ public class DoubleActionList {
 			}
 			
 		} catch (NoSuchElementException e) {
-			System.out.println("Nothing in queue I am done");
+			if (done) {
+				System.out.println("Nothing in queue I am done");
+				done=false;
+			}
 		}
 	}
 	

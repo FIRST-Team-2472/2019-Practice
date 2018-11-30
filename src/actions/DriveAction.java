@@ -10,6 +10,7 @@ public class DriveAction implements Actionable{
 	private final double lifetime;
 	private double speed = 0.5;
 	
+	
 
 	public DriveAction (double lifetime) {
 		this.lifetime = lifetime;
@@ -22,7 +23,8 @@ public class DriveAction implements Actionable{
 	
 	@Override
 	public void startAction() {
-		endTime = System.currentTimeMillis() + (long)(1000 * lifetime);		
+		endTime = System.currentTimeMillis() + (long)(1000 * lifetime);
+		System.out.println("Start DriveAction");
 	}
 	
 	@Override
@@ -31,7 +33,6 @@ public class DriveAction implements Actionable{
 		Robot.backLeft.set(ControlMode.PercentOutput, speed);
 		Robot.frontRight.set(ControlMode.PercentOutput, speed);
 		Robot.backRight.set(ControlMode.PercentOutput, speed);
-		System.out.println("peeriodic");
 	}
 
 	@Override
@@ -40,7 +41,6 @@ public class DriveAction implements Actionable{
 		Robot.backLeft.set(ControlMode.PercentOutput, 0.0);
 		Robot.frontRight.set(ControlMode.PercentOutput, 0.0);
 		Robot.backRight.set(ControlMode.PercentOutput, 0.0);
-		System.out.println("EndAction");
 		
 	}
 
@@ -51,6 +51,11 @@ public class DriveAction implements Actionable{
 		} else {
 			return false;
 		}
+	}
+	
+	public String toString() {
+		return "DriveAction life:"+lifetime+" speed:"+speed;
+		
 	}
 
 	

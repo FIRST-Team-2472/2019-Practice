@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	
 	
-	DoubleActionList actions = new DoubleActionList();
+	DoubleActionList actions;
 	
 
 	
@@ -67,8 +67,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		actions.addAction(new DriveAction(4,0.5), new WaitAction(0));
-		actions.addAction(new DriveAction(3,-0.5), new WaitAction(0));
+		actions = new DoubleActionList();
+		System.out.println("create first action");
+		actions.addAction(new DriveAction(2,0.5), new WaitAction(3));
+		System.out.println("create second action");
+		actions.addAction(new DriveAction(1,-0.5), new WaitAction(3));
 	}
 
 	/**

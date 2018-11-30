@@ -31,6 +31,11 @@ public class WaitAction implements Actionable{
 			return false;
 		}
 	}
+	
+	public String toString() {
+		return "WaitAction life:"+lifetime;
+		
+	}
 
 	
 
