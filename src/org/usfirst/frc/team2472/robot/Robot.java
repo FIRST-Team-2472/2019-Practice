@@ -7,6 +7,17 @@
 
 package org.usfirst.frc.team2472.robot;
 
+import java.util.ArrayList;
+
+import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
+import actions.Action;
+import actions.DoubleActionList;
+import actions.DriveAction;
+import actions.Forward;
+import actions.WaitAction;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,10 +30,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends IterativeRobot {
-	private static final String kDefaultAuto = "Default";
-	private static final String kCustomAuto = "My Auto";
-	private String m_autoSelected;
-	private SendableChooser<String> m_chooser = new SendableChooser<>();
+	
+	
+	DoubleActionList actions;
+	
+
+	
+	public static TalonSRX frontLeft = new TalonSRX(13);
+	public static TalonSRX backLeft = new TalonSRX(3);
+	public static TalonSRX frontRight = new TalonSRX(14);
+	public static TalonSRX backRight = new TalonSRX(5);
+	
+
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -30,9 +49,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		m_chooser.addDefault("Default Auto", kDefaultAuto);
-		m_chooser.addObject("My Auto", kCustomAuto);
-		SmartDashboard.putData("Auto choices", m_chooser);
+		frontRight.setInverted(true);
+		backRight.setInverted(true);
+		
 	}
 
 	/**
@@ -48,10 +67,11 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		m_autoSelected = m_chooser.getSelected();
-		// autoSelected = SmartDashboard.getString("Auto Selector",
-		// defaultAuto);
-		System.out.println("Auto selected: " + m_autoSelected);
+		actions = new DoubleActionList();
+		System.out.println("create first action");
+		actions.addAction(new DriveAction(2,0.5), new WaitAction(3));
+		System.out.println("create second action");
+		actions.addAction(new DriveAction(1,-0.5), new WaitAction(3));
 	}
 
 	/**
@@ -59,15 +79,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		switch (m_autoSelected) {
-			case kCustomAuto:
-				// Put custom auto code here
-				break;
-			case kDefaultAuto:
-			default:
-				// Put default auto code here
-				break;
-		}
+		actions.step();
 	}
 
 	/**
@@ -82,5 +94,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
+		frontLeft.set(ControlMode.PercentOutput, 0.2);
+		backLeft.set(ControlMode.PercentOutput, 0.2);
+		frontRight.set(ControlMode.PercentOutput, 0.2);
+		backRight.set(ControlMode.PercentOutput, 0.2);
 	}
 }
